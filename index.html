@@ -77,22 +77,53 @@
             </div>
           </div> -->
           <div class="forecast-weather" id="forecast-weather">
-            <div class="selected-date" id = "selected-date">
-              <h2 class="text-center" id="city-name"></h2>
-              <div class="weather-container">
-                <div class="weather-icon-box">
-                  <img id="weather-icon" src="" alt="">
-                </div>
-                <div class="weather-info">
-                  <p id="weather-desc"></p>
-                  <p>Temperature: <span id="temp"></span>°C</p>
-                  <p>Feels Like: <span id="feels-like"></span>°C</p>
-                  <p>Humidity: <span id="humidity"></span>%</p>
-                  <p>Pressure: <span id="pressure"></span> hPa</p>
-                  <p>Wind Speed: <span id="wind-speed"></span> m/s</p>
-                  <p>Cloudiness: <span id="cloudiness"></span>%</p>
+            <div>
+              <div class="selected-date" id = "selected-date">
+                <div class="weather-container">
+                  <div class="weather-icon-box" id="weather-icon-box">
+                    <h3 class="text-center" id="selected-date-title"></h3>
+                    <p id="weather-desc"></p>
+                    <p>Temperature: <span id="temp"></span>°C</p>
+                    <p>Feels Like: <span id="feels-like"></span>°C</p>
+                    <div>
+                      <img id="weather-icon" src="" alt="">
+                    </div>
+                    <p>Humidity: <span id="humidity"></span>%</p>
+                    <p>Pressure: <span id="pressure"></span> hPa</p>
+                    <p>Wind Speed: <span id="wind-speed"></span> m/s</p>
+                    <p>Cloudiness: <span id="cloudiness"></span>%</p>
+                  </div>
+                  <div class="selected-date-times" id="selected-date-times">
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(0)">00:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(1)">03:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(2)">06:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(3)">09:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(4)">12:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(5)">15:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(6)">18:00</button>
+                    </div>
+                    <div class="time-container">
+                      <button class="btn btn-info time-btn" onclick="getForecast(7)">21:00</button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div>
+              <h2 class="text-center" id="city-name"></h2>
             </div>
             <div class="future-date" id = "future-date">
 

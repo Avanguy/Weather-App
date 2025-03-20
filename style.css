@@ -48,12 +48,34 @@ html, body {
 .city-container:hover .city-name {
   background-color: black; /* Darker on hover */
 }
-
+.selected-date{
+  display: flex;
+  justify-content: center;
+}
 .popularCitiesGrid .row {
   display: flex;
   flex-wrap: wrap;
 }
+.selected-date-times {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-template-rows: repeat(4, auto); /* 4 rows */
+  gap: 10px; /* Adjust the gap between grid items as needed */
+}
 
+.time-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.time-btn {
+  width: 100%; /* Make the button take up the full width of its container */
+  height: 100%; /* Make the button take up the full height of its container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .current-weather {
   display: none; /* Initially hidden */
   align-items: center;
@@ -67,12 +89,22 @@ html, body {
 .forecast-weather{
   display: none;
 }
-.weather-icon-box{
-  background-color: rgb(89, 89, 36);
-  border-radius: 5px;
-  border: 1px solid black;
-  padding: 5px;
-  margin-right: 10px;
+.weather-icon-box {
+  display: grid;
+  grid-template-columns: repeat(3, 150px); /* 3 columns */
+  grid-template-rows: repeat(3, 150px); /* 3 rows with equal height */
+  gap: 10px; /* Space between grid items */
+  padding: 20px;
+  margin-right: 20%;
+}
+
+.weather-icon-box > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  border: 2px solid black; /* Border around each box */
+  padding: 10px;
 }
 .weather-container{
   display: flex;

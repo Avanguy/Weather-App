@@ -88,8 +88,9 @@ let cities = [
         const currentWeather = data.list[0]; // Get the first entry for current weather
         const weatherDesc= getWeatherDescription(currentWeather.weather[0].description)
         // Update individual elements instead of using innerHTML
+        document.getElementById("selected-date-title").textContent = currentWeather.dt_txt;
         document.getElementById("city-name").textContent = data.city.name;
-        document.getElementById("weather-desc").textContent = `Weather: ${weatherDesc} - Current Weather`;
+        document.getElementById("weather-desc").textContent = `${weatherDesc}`;
         document.getElementById("weather-icon").src = `http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`;
         document.getElementById("weather-icon").alt = currentWeather.weather[0].description;
         document.getElementById("temp").textContent = (currentWeather.main.temp - 273.15).toFixed(2);
