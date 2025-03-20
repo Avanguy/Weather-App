@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body class="bg-light">
+    <header>
+      <h1 class="text-center">
+          Weather App
+      </h1>
+    </header>
+    <div class="content">
+        <div id="searchBox" class="searchBox">
+          <div class="popularCitiesGrid overflow-auto" style="max-height: 100vh;">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Pick a city!</h5>
+                <div class="row">
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/newyork.jpg');" onclick="getWeather('newyork')"></button>
+                    <div class="city-name">New York</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/london.jpg');" onclick="getWeather('london')"></button>
+                    <div class="city-name">London</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/tokyo.jpg');" onclick="getWeather('tokyo')"></button>
+                    <div class="city-name">Tokyo</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/paris.jpg');" onclick="getWeather('paris')"></button>
+                    <div class="city-name">Paris</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/nuuk.jpg');" onclick="getWeather('nuuk')"></button>
+                    <div class="city-name">Nuuk</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/sanfrancisco.jpg');" onclick="getWeather('sanfrancisco')"></button>
+                    <div class="city-name">San Francisco</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/sydney.jpg');" onclick="getWeather('sydney')"></button>
+                    <div class="city-name">Sydney</div>
+                  </div>
+                  <div class="city-container">
+                    <button class="btn city-btn" style="background-image: url('images/rome.jpg');" onclick="getWeather('rome')"></button>
+                    <div class="city-name">Rome</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="infoBox">
+          <!-- <div class="current-weather" id="current-weather">
+            <h2 class="text-center" id="city-name"></h2>
+            <div class="weather-container">
+              <div class="weather-icon-box">
+                <img id="weather-icon" src="" alt="">
+              </div>
+              <div class="weather-info">
+                <p id="weather-desc"></p>
+                <p>Temperature: <span id="temp"></span>°C</p>
+                <p>Feels Like: <span id="feels-like"></span>°C</p>
+                <p>Humidity: <span id="humidity"></span>%</p>
+                <p>Pressure: <span id="pressure"></span> hPa</p>
+                <p>Wind Speed: <span id="wind-speed"></span> m/s</p>
+                <p>Cloudiness: <span id="cloudiness"></span>%</p>
+              </div>
+            </div>
+          </div> -->
+          <div class="forecast-weather" id="forecast-weather">
+            <div class="selected-date" id = "selected-date">
+              <h2 class="text-center" id="city-name"></h2>
+              <div class="weather-container">
+                <div class="weather-icon-box">
+                  <img id="weather-icon" src="" alt="">
+                </div>
+                <div class="weather-info">
+                  <p id="weather-desc"></p>
+                  <p>Temperature: <span id="temp"></span>°C</p>
+                  <p>Feels Like: <span id="feels-like"></span>°C</p>
+                  <p>Humidity: <span id="humidity"></span>%</p>
+                  <p>Pressure: <span id="pressure"></span> hPa</p>
+                  <p>Wind Speed: <span id="wind-speed"></span> m/s</p>
+                  <p>Cloudiness: <span id="cloudiness"></span>%</p>
+                </div>
+              </div>
+            </div>
+            <div class="future-date" id = "future-date">
+
+            </div>
+          </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.content{
+    display: flex;
+    flex: 1;
+}
+.searchBox{
+    flex: 1;
+}
+.infoBox{
+    flex: 1;
+    background-color: aqua;
+}
+.city-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.city-btn {
+  width: 100%;
+  height: 200px; /* Adjust height as needed */
+  background-size: cover;
+  background-position: center;
+  border: none;
+}
+
+.city-name {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(50%);
+  background-color: rgba(0, 0, 0, 0.8); /* Transparent black */
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.city-container:hover .city-name {
+  background-color: black; /* Darker on hover */
+}
+
+.popularCitiesGrid .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.current-weather {
+  display: none; /* Initially hidden */
+  align-items: center;
+  padding: 10px;
+  background-color: #867171;
+}
+.weather-info{
+  display: flex;
+  flex-direction: column; 
+}
+.forecast-weather{
+  display: none;
+}
+.weather-icon-box{
+  background-color: rgb(89, 89, 36);
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 5px;
+  margin-right: 10px;
+}
+.weather-container{
+  display: flex;
+}
+@media (min-width: 768px) {
+  .city-container {
+    flex: 0 0 48%; /* Two columns */
+    max-width: 48%;
+  }
+}
+.single-column .city-container {
+  flex: 0 0 100%; /* Single column */
+  max-width: 100%;
+}
+.single-column{
+  flex: 0.25;
+}
