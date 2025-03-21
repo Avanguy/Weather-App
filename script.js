@@ -88,7 +88,14 @@ let cities = [
         const currentWeather = data.list[0]; // Get the first entry for current weather
         const weatherDesc= getWeatherDescription(currentWeather.weather[0].description)
         // Update individual elements instead of using innerHTML
-        document.getElementById("selected-date-title").textContent = currentWeather.dt_txt;
+        const date = new Date(currentWeather.dt_txt);
+        const options = { month: 'long', day: 'numeric' };
+        const formattedDate = date.toLocaleDateString(undefined, options);
+        const time = currentWeather.dt_txt.split(' ')[1].slice(0, 5); // Extract the time part (HH:MM)
+
+        // Update individual elements instead of using innerHTML
+        document.getElementById("selected-date-title").textContent = formattedDate;
+        document.getElementById("selected-date-time").textContent = time;
         document.getElementById("city-name").textContent = data.city.name;
         document.getElementById("weather-desc").textContent = `${weatherDesc}`;
         document.getElementById("weather-icon").src = `http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`;
@@ -148,3 +155,18 @@ let cities = [
             document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
         });
   }
+  function disablePastTimeButtons() {
+    const currentTime = new Date();
+    const currentHours = currentTime.getHours();
+  
+    const timeButtons = document.querySelectorAll('.time-btn');
+    timeButtons.forEach(button => {
+      const buttonTime = parseInt(button.textContent.split(':')[0], 10);
+      if (buttonTime < currentHours) {
+        button.disabled = true;
+      }
+    });
+  }
+  
+  // Call the function to disable past time buttons when the page loads
+  document.addEventListener('DOMContentLoaded', disablePastTimeButtons);
