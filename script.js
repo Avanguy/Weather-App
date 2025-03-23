@@ -6,7 +6,7 @@ let cities = [
     { name: "nuuk", coords: [64.1835, -51.7216] },
     { name: "sanfrancisco", coords: [37.7749, -122.4194] },
     { name: "sydney", coords: [-33.8688, 151.2093] },
-    { name: "rome", coords: [41.9028, 12.4964] }
+    { name: "rome", coords: [41.8933203, 12.4829321] }
   ];
   const weatherDescriptions = {
     "clear sky": "It's a clear sky today!",
@@ -82,17 +82,24 @@ let cities = [
   function getWeather(city) {
     document.getElementById('searchBox').classList.add('single-column');
   
+    const infoBox = document.querySelector('.infoBox');
+    infoBox.style.backgroundImage = `url('images/${city}2.jpg')`;
+    infoBox.style.backgroundSize = 'cover';
+    infoBox.style.backgroundPosition = 'center';
     findForecast(city)
       .then(data => {
         console.log(data);
         const currentWeather = data.list[0]; // Get the first entry for current weather
-        const weatherDesc= getWeatherDescription(currentWeather.weather[0].description)
-        // Update individual elements instead of using innerHTML
+        const weatherDesc = getWeatherDescription(currentWeather.weather[0].description);
+  
+        // Format the date to display only month and day
         const date = new Date(currentWeather.dt_txt);
         const options = { month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString(undefined, options);
+  
+        // Extract the time part from the current weather data
         const time = currentWeather.dt_txt.split(' ')[1].slice(0, 5); // Extract the time part (HH:MM)
-
+  
         // Update individual elements instead of using innerHTML
         document.getElementById("selected-date-title").textContent = formattedDate;
         document.getElementById("selected-date-time").textContent = time;
@@ -106,54 +113,53 @@ let cities = [
         document.getElementById("pressure").textContent = currentWeather.main.pressure;
         document.getElementById("wind-speed").textContent = currentWeather.wind.speed;
         document.getElementById("cloudiness").textContent = currentWeather.clouds.all;
-       
+  
         // Show the weather info once data is ready
-        document.getElementById("forecast-weather").style.display = "block"; 
+        document.getElementById("forecast-weather").style.display = "block";
         const forecastByDate = {};
         data.list.forEach(forecast => {
-            const date = forecast.dt_txt.split(' ')[0]; // Extract the date part
-            if (!forecastByDate[date]) {
+          const date = forecast.dt_txt.split(' ')[0]; // Extract the date part
+          if (!forecastByDate[date]) {
             forecastByDate[date] = [];
-            }
-            forecastByDate[date].push({
+          }
+          forecastByDate[date].push({
             time: forecast.dt_txt.split(' ')[1], // Extract the time part
             weatherDesc: getWeatherDescription(forecast.weather[0].description),
             icon: forecast.weather[0].icon,
             temp: (forecast.main.temp - 273.15).toFixed(2),
             humidity: forecast.main.humidity,
             windSpeed: forecast.wind.speed
-            });
+          });
         });
-
+  
         // Convert the grouped data into an array of arrays
         const forecastArray = Object.keys(forecastByDate).map(date => ({
-            date,
-            forecasts: forecastByDate[date]
+          date,
+          forecasts: forecastByDate[date]
         }));
-
+  
         console.log(forecastArray);
-    
-            /* let forecastWeatherInfo = `<h2 class = "text-center">Forecast for ${data.city.name}</h2>`;
-            data.list.forEach(forecast => {
-            const weatherDesc= getWeatherDescription(forecast.weather[0].description)
-            forecastWeatherInfo += `
-                <div>
-                <p>Date: ${forecast.dt_txt}</p>
-                <p>Weather: ${weatherDesc}</p>
-                <img src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png" alt="${forecast.weather[0].description}">
-                <p>Temperature: ${(forecast.main.temp - 273.15).toFixed(2)}°C</p>
-                <p>Humidity: ${forecast.main.humidity}%</p>
-                <p>Wind Speed: ${forecast.wind.speed} m/s</p>
-                </div>
+  
+        // Populate the day buttons with forecast data
+        forecastArray.forEach((day, index) => {
+          if (index < 6) { // Ensure we only process up to 6 days
+            const dayButton = document.querySelectorAll('.day-btn')[index];
+            const noonForecast = day.forecasts.find(forecast => forecast.time === "12:00:00") || day.forecasts[0]; // Find the 12:00 forecast or fallback to the first forecast
+            const dayOfWeek = new Date(day.date).toLocaleDateString(undefined, { weekday: 'long' }); // Get the day of the week
+            dayButton.innerHTML = `
+              <div>${day.date} - ${dayOfWeek}</div>
+              <div><img src="http://openweathermap.org/img/wn/${noonForecast.icon}@2x.png" alt="${noonForecast.weatherDesc}"></div>
+              <div>${noonForecast.temp}°C</div>
+              <div>${noonForecast.weatherDesc}</div>
             `;
-            });
-            document.getElementById("forecast-weather").innerHTML = forecastWeatherInfo; */
-        })
-        .catch(error => {
-            console.log(error);
-            document.getElementById("current-weather").innerHTML = `<p>Error fetching weather data: ${error}</p>`;
-            document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
+          }
         });
+      })
+      .catch(error => {
+        console.log(error);
+        document.getElementById("current-weather").innerHTML = `<p>Error fetching weather data: ${error}</p>`;
+        document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
+      });
   }
   function disablePastTimeButtons() {
     const currentTime = new Date();

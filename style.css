@@ -95,22 +95,50 @@ html, body {
   grid-template-rows: repeat(3, 1fr); /* 3 rows with equal height */
   gap: 10px; /* Space between grid items */
   padding: 20px;
-  margin-right: 20%;
+  margin-right: 10%;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black outline */
 }
 
 .weather-icon-box > * {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 20px;
   border: 2px solid black; /* Border around each box */
   padding: 10px;
+  background-color: rgba(0, 0, 0, 0.0.5);
+  backdrop-filter: blur(10px);
+  color: white;
 }
 .weather-container{
   display: flex;
 }
 .city-title-container{
-  background-color: darkslateblue;
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black outline */
+}
+.future-date {
+  display: flex;
+  flex-direction: row; /* Arrange the buttons in a row */
+  height: 100%; /* Make the container take up the full height */
+}
+
+.future-date > .day-container {
+  flex: 1; /* Make each day-container take up equal space */
+  display: flex; /* Use Flexbox to center the button */
+}
+
+.day-btn {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: black 1px solid;
+  height: 100%; /* Make the button take up the full height of its container */
+}
+.day-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
 }
 @media (min-width: 768px) {
   .city-container {
