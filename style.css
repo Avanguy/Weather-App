@@ -31,7 +31,10 @@ html, body {
   background-position: center;
   border: none;
 }
-
+.selected-day{
+  border: green 1px solid;
+  background-color: greenyellow;
+}
 .city-name {
   position: absolute;
   bottom: 50%;
