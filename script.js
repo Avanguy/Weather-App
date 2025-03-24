@@ -85,25 +85,92 @@ let cities = [
     const infoBox = document.querySelector('.infoBox');
     infoBox.style.backgroundImage = `url('images/${city}2.jpg')`;
     infoBox.style.backgroundSize = 'cover';
-    infoBox.style.backgroundPosition = 'center';
-    findForecast(city)
-      .then(data => {
-        console.log(data);
-        const currentWeather = data.list[0]; // Get the first entry for current weather
+    infoBox.style.backgroundPosition = 'center';const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];    
+    let cityCache = sessionStorage.getItem(city);
+    sessionStorage.setItem("selectedCity", city);
+    sessionStorage.setItem("selectedDate", formattedDate);
+
+    if (cityCache) {
+        console.log(JSON.parse(cityCache))
+    }
+    else{
+        findForecast(city)
+          .then(data => {
+            console.log(data);
+            let forecastByDate = {};    
+            data.list.forEach(forecast => {
+                const date = forecast.dt_txt.split(' ')[0]; // Extract the date part
+                if (!forecastByDate[date]) {
+                  forecastByDate[date] = [];
+                }
+                forecastByDate[date].push({
+                  time: forecast.dt_txt.split(' ')[1], // Extract the time part
+                  weatherDesc: getWeatherDescription(forecast.weather[0].description),
+                  icon: forecast.weather[0].icon,
+                  temp: (forecast.main.temp - 273.15).toFixed(2),
+                  humidity: forecast.main.humidity,
+                  windSpeed: forecast.wind.speed,
+                  feelsLike: (forecast.main.feels_like - 273.15).toFixed(2),
+                  pressure: forecast.main.pressure,
+                  clouds: forecast.clouds.all
+                });
+              });
+        
+              // Convert the grouped data into an array of arrays
+              const forecastArray = Object.keys(forecastByDate).map(date => ({
+                date,
+                forecasts: forecastByDate[date]
+              }));
+              sessionStorage.setItem(city, JSON.stringify(forecastArray));
+              
+              const currentWeather = data.list[0]
+              const cityName = data.city.name
+              setAllDisplay(cityName,currentWeather,forecastArray)
+          })
+          .catch(error => {
+            console.log(error);
+            document.getElementById("current-weather").innerHTML = `<p>Error fetching weather data: ${error}</p>`;
+            document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
+          });
+      }
+    }
+    function setMainDisplay(details){
+        console.log(details)
+        const city = sessionStorage.getItem("selectedCity")
+        const date = sessionStorage.getItem("selectedDate")
+        const {weatherDesc, humidity,windSpeed,time,icon,temp,feelsLike,clouds} = details;
+        document.getElementById("selected-date-title").textContent = date;
+        document.getElementById("selected-date-time").textContent = time;
+        document.getElementById("city-name").textContent = city;
+        document.getElementById("weather-desc").textContent = `${weatherDesc}`;
+        document.getElementById("weather-icon").src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+        document.getElementById("weather-icon").alt = weatherDesc;
+        document.getElementById("temp").textContent = temp;
+        document.getElementById("feels-like").textContent = feelsLike;
+        document.getElementById("humidity").textContent = humidity;
+        document.getElementById("pressure").textContent = pressure;
+        document.getElementById("wind-speed").textContent = windSpeed;
+        document.getElementById("cloudiness").textContent = clouds;
+    }
+    function setAllDisplay(name,currentWeather, forecastByDate) {
+    try {
+        console.log(currentWeather)
+        console.log(forecastByDate)
         const weatherDesc = getWeatherDescription(currentWeather.weather[0].description);
-  
+
         // Format the date to display only month and day
         const date = new Date(currentWeather.dt_txt);
         const options = { month: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString(undefined, options);
-  
+
         // Extract the time part from the current weather data
         const time = currentWeather.dt_txt.split(' ')[1].slice(0, 5); // Extract the time part (HH:MM)
-  
+
         // Update individual elements instead of using innerHTML
         document.getElementById("selected-date-title").textContent = formattedDate;
         document.getElementById("selected-date-time").textContent = time;
-        document.getElementById("city-name").textContent = data.city.name;
+        document.getElementById("city-name").textContent = name;
         document.getElementById("weather-desc").textContent = `${weatherDesc}`;
         document.getElementById("weather-icon").src = `http://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png`;
         document.getElementById("weather-icon").alt = currentWeather.weather[0].description;
@@ -113,59 +180,47 @@ let cities = [
         document.getElementById("pressure").textContent = currentWeather.main.pressure;
         document.getElementById("wind-speed").textContent = currentWeather.wind.speed;
         document.getElementById("cloudiness").textContent = currentWeather.clouds.all;
-  
+
         // Show the weather info once data is ready
         document.getElementById("forecast-weather").style.display = "block";
-        const forecastByDate = {};
-        data.list.forEach(forecast => {
-          const date = forecast.dt_txt.split(' ')[0]; // Extract the date part
-          if (!forecastByDate[date]) {
-            forecastByDate[date] = [];
-          }
-          forecastByDate[date].push({
-            time: forecast.dt_txt.split(' ')[1], // Extract the time part
-            weatherDesc: getWeatherDescription(forecast.weather[0].description),
-            icon: forecast.weather[0].icon,
-            temp: (forecast.main.temp - 273.15).toFixed(2),
-            humidity: forecast.main.humidity,
-            windSpeed: forecast.wind.speed
-          });
-        });
-  
-        // Convert the grouped data into an array of arrays
-        const forecastArray = Object.keys(forecastByDate).map(date => ({
-          date,
-          forecasts: forecastByDate[date]
-        }));
-  
-        console.log(forecastArray);
-  
+
         // Populate the day buttons with forecast data
-        forecastArray.forEach((day, index) => {
-          if (index < 6) { // Ensure we only process up to 6 days
+        forecastByDate.forEach((day, index) => {
+        if (index < 6) { // Ensure we only process up to 6 days
             const dayButton = document.querySelectorAll('.day-btn')[index];
             const noonForecast = day.forecasts.find(forecast => forecast.time === "12:00:00") || day.forecasts[0]; // Find the 12:00 forecast or fallback to the first forecast
             const dayOfWeek = new Date(day.date).toLocaleDateString(undefined, { weekday: 'long' }); // Get the day of the week
             dayButton.innerHTML = `
-              <div>${day.date} - ${dayOfWeek}</div>
-              <div><img src="http://openweathermap.org/img/wn/${noonForecast.icon}@2x.png" alt="${noonForecast.weatherDesc}"></div>
-              <div>${noonForecast.temp}°C</div>
-              <div>${noonForecast.weatherDesc}</div>
+            <div>${day.date} - ${dayOfWeek}</div>
+            <div><img src="http://openweathermap.org/img/wn/${noonForecast.icon}@2x.png" alt="${noonForecast.weatherDesc}"></div>
+            <div>${noonForecast.temp}°C</div>
+            <div>${noonForecast.weatherDesc}</div>
             `;
-          }
+        }
         });
-      })
-      .catch(error => {
+    } catch (error) {
         console.log(error);
         document.getElementById("current-weather").innerHTML = `<p>Error fetching weather data: ${error}</p>`;
         document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
-      });
-  }
+    }
+    }
+    function getForecastTime(time){
+        const city = sessionStorage.getItem("selectedCity")
+        const date = sessionStorage.getItem("selectedDate")
+        const forecast = JSON.parse(sessionStorage.getItem(city))
+        const forecastDate = forecast.find(forecast => forecast.date === date)
+        const formattedSearchTime = `${String(time * 3).padStart(2, '0')}:00:00`;
+        const forecastforTime = forecastDate.forecasts.find(forecast => forecast.time === formattedSearchTime)
+        console.log(forecastforTime)
+        setMainDisplay(forecastforTime)
+    }
   function disablePastTimeButtons() {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
   
     const timeButtons = document.querySelectorAll('.time-btn');
+    if(currentHours >= 22) {return}
+
     timeButtons.forEach(button => {
       const buttonTime = parseInt(button.textContent.split(':')[0], 10);
       if (buttonTime < currentHours) {
