@@ -92,7 +92,6 @@ let cities = [
     sessionStorage.setItem("selectedDate", formattedDate);
 
     if (cityCache) {
-        console.log(JSON.parse(cityCache))
         const forecast = JSON.parse(cityCache);
         const currentWeather = forecast[0].forecasts[0];
         setAllDisplay(city,currentWeather,forecast)
@@ -100,7 +99,6 @@ let cities = [
     else{
         findForecast(city)
           .then(data => {
-            console.log(data);
             let forecastByDate = {};    
             data.list.forEach(forecast => {
                 const date = forecast.dt_txt.split(' ')[0]; // Extract the date part
@@ -132,14 +130,12 @@ let cities = [
               setAllDisplay(cityName,currentWeather,forecastArray)
           })
           .catch(error => {
-            console.log(error);
             document.getElementById("current-weather").innerHTML = `<p>Error fetching weather data: ${error}</p>`;
             document.getElementById("forecast-weather").innerHTML = `<p>Error fetching forecast data: ${error}</p>`;
           });
       }
     }
     function setMainDisplay(details){
-        console.log(details)
         const city = sessionStorage.getItem("selectedCity")
         const date = sessionStorage.getItem("selectedDate")
         const newDate = new Date(date);
@@ -147,7 +143,6 @@ let cities = [
         const {weatherDesc, humidity,windSpeed,time,icon,temp,feelsLike,pressure,clouds} = details;
         document.getElementById("selected-date-title").textContent = formattedDate;
         document.getElementById("selected-date-time").textContent = time;
-        document.getElementById("city-name").textContent = city;
         document.getElementById("weather-desc").textContent = `${weatherDesc}`;
         document.getElementById("weather-icon").src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
         document.getElementById("weather-icon").alt = weatherDesc;
@@ -160,15 +155,12 @@ let cities = [
     }
     function setAllDisplay(name,currentWeather, forecastByDate) {
     try {
-        console.log(currentWeather)
-        console.log(forecastByDate)
         setMainDisplay(currentWeather)
         const dateCheck = sessionStorage.getItem("selectedDate")
-        console.log(dateCheck)
 
         // Show the weather info once data is ready
         document.getElementById("forecast-weather").style.display = "block";
-
+        highlightSelectedTime(currentWeather.time)
         // Populate the day buttons with forecast data
         forecastByDate.forEach((day, index) => {
         if (index < 6) { // Ensure we only process up to 6 days
@@ -201,6 +193,7 @@ let cities = [
         const forecastDate = forecast.find(forecast => forecast.date === date)
         const formattedSearchTime = `${String(time * 3).padStart(2, '0')}:00:00`;
         const forecastforTime = forecastDate.forecasts.find(forecast => forecast.time === formattedSearchTime)
+        highlightSelectedTime(formattedSearchTime)
         setMainDisplay(forecastforTime)
     }
     function getForecastForDay(day){
@@ -210,9 +203,8 @@ let cities = [
         const selectedWeather = forecast[day].forecasts[0]
         sessionStorage.setItem("selectedDate",selectedDate)
         setMainDisplay(selectedWeather)
+        highlightSelectedTime(selectedWeather.time)
         document.getElementById("forecast-weather").style.display = "block";
-
-        console.log(forecast)
         // Populate the day buttons with forecast data
         forecast.forEach((day, index) => {
         if (index < 6) { // Ensure we only process up to 6 days
@@ -226,12 +218,21 @@ let cities = [
         });
         disablePastTimeButtons()
     }
+    function highlightSelectedTime(time) {
+        const timeButtons = document.querySelectorAll('.time-btn');
+        timeButtons.forEach(button => {
+          console.log(button.textContent)
+          if (button.textContent + ":00" === time) {
+            button.classList.add('selected-time');
+          } else {
+            button.classList.remove('selected-time');
+          }
+        });
+    }
   function disablePastTimeButtons() {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
     const selectedDate = sessionStorage.getItem("selectedDate");
-    console.log(selectedDate)
-    console.log(currentTime.toISOString().split('T')[0])
     const timeButtons = document.querySelectorAll('.time-btn');
     if(selectedDate !== currentTime.toISOString().split('T')[0]) {
         timeButtons.forEach(button => {
@@ -243,7 +244,7 @@ let cities = [
     if(currentHours >= 22) {return}
     timeButtons.forEach(button => {
       const buttonTime = parseInt(button.textContent.split(':')[0], 10);
-      if (buttonTime < currentHours + 3  ) {
+      if (buttonTime < currentHours) {
         button.disabled = true;
       }
     });
@@ -251,4 +252,5 @@ let cities = [
   
   // Call the function to disable past time buttons when the page loads
   document.addEventListener('DOMContentLoaded', disablePastTimeButtons);
+  
   sessionStorage.setItem("selectedDate", new Date().toISOString().split('T')[0])
