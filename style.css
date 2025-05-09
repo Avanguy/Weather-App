@@ -13,7 +13,6 @@ html, body {
 }
 .infoBox{
     flex: 1;
-    background-color: aqua;
 }
 .city-container {
   position: relative;
