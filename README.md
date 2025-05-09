@@ -1,6 +1,6 @@
 # 🌤️ Weather App
 
-A sleek, responsive weather dashboard built with React, TypeScript, and the OpenWeatherMap API. This app allows users to search for a city and view real-time weather data and hourly forecasts with a dynamic, animated UI.
+A responsive weather dashboard built with React and the OpenWeatherMap API. This app allows users to select a city and view weather data and hourly forecasts with a dynamic UI.
 
 ---
 
